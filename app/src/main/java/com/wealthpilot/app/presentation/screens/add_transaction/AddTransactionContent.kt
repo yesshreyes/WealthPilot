@@ -36,13 +36,15 @@ fun AddTransactionContent(
         OutlinedTextField(
             value = state.amount,
             onValueChange = onAmountChange,
-            label = { Text("Amount") }
+            label = { Text("Amount") },
+            modifier = Modifier.fillMaxWidth()
         )
 
         OutlinedTextField(
             value = state.category,
             onValueChange = onCategoryChange,
-            label = { Text("Category") }
+            label = { Text("Category") },
+            modifier = Modifier.fillMaxWidth()
         )
 
         Row {
@@ -58,7 +60,8 @@ fun AddTransactionContent(
         OutlinedTextField(
             value = state.notes,
             onValueChange = onNotesChange,
-            label = { Text("Notes") }
+            label = { Text("Notes") },
+            modifier = Modifier.fillMaxWidth()
         )
 
         Button(

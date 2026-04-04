@@ -2,8 +2,8 @@ package com.wealthpilot.app.presentation.navigation
 
 import androidx.navigation.NavController
 
-fun NavController.navigateToAddTransaction() {
-    navigate(AddTransaction)
+fun NavController.navigateToAddTransaction(transactionId: String? = null) {
+    navigate(AddTransaction(transactionId))
 }
 
 fun NavController.navigateToInsights() {

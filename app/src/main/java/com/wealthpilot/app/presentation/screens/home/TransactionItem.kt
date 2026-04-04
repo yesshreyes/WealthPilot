@@ -1,48 +1,63 @@
 package com.wealthpilot.app.presentation.screens.home
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissBoxValue
+import androidx.compose.material3.rememberSwipeToDismissBoxState
+import androidx.compose.material3.Text
+import androidx.compose.material3.Button
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.wealthpilot.app.domain.model.Transaction
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TransactionItem(
     transaction: Transaction,
-    onDelete: () -> Unit
+    onDelete: () -> Unit,
+    onEdit: () -> Unit
 ) {
 
-    Card(
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
+    val dismissState = rememberSwipeToDismissBoxState(
+        confirmValueChange = {
+            if (it == SwipeToDismissBoxValue.EndToStart) {
+                onDelete()
+                true
+            } else false
+        }
+    )
 
-            Text(
-                text = transaction.category,
-                style = MaterialTheme.typography.titleMedium
-            )
+    SwipeToDismissBox(
+        state = dismissState,
+        backgroundContent = {},
+        content = {
+            Card(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Column(
+                    modifier = Modifier.padding(16.dp)
+                ) {
 
-            Spacer(modifier = Modifier.height(4.dp))
+                    Text(text = transaction.category)
 
-            Text(
-                text = "₹${transaction.amount}",
-                style = MaterialTheme.typography.bodyLarge
-            )
+                    Spacer(modifier = Modifier.height(4.dp))
 
-            Spacer(modifier = Modifier.height(4.dp))
+                    Text(text = "₹${transaction.amount}")
 
-            Text(
-                text = transaction.type.name
-            )
+                    Spacer(modifier = Modifier.height(8.dp))
 
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Button(onClick = onDelete) {
-                Text("Delete")
+                    Button(onClick = onEdit) {
+                        Text("Edit")
+                    }
+                }
             }
         }
-    }
+    )
 }

@@ -5,14 +5,15 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.navigation.NavController
-import com.wealthpilot.app.domain.model.TransactionType
 import com.wealthpilot.app.domain.repository.TransactionRepository
 
 @Composable
 fun AddTransactionScreen(
     navController: NavController,
-    repository: TransactionRepository
+    repository: TransactionRepository,
+    transactionId: String?
 ) {
+
     val viewModel = remember {
         AddTransactionViewModel(repository)
     }
@@ -26,7 +27,7 @@ fun AddTransactionScreen(
         onTypeChange = viewModel::onTypeChange,
         onNotesChange = viewModel::onNotesChange,
         onSave = {
-            viewModel.saveTransaction {
+            viewModel.saveTransaction(transactionId) {
                 navController.popBackStack()
             }
         }

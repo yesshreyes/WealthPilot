@@ -6,6 +6,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.toRoute
 import com.wealthpilot.app.data.repository.RepositoryProvider
 import com.wealthpilot.app.presentation.screens.add_transaction.AddTransactionScreen
 import com.wealthpilot.app.presentation.screens.home.HomeScreen
@@ -27,13 +28,17 @@ fun WealthPilotNavGraph(
             )
         }
 
-        composable<AddTransaction> {
+        composable<AddTransaction> { backStackEntry ->
+
             val context = LocalContext.current
             val repository = RepositoryProvider.provideTransactionRepository(context)
 
+            val args = backStackEntry.toRoute<AddTransaction>()
+
             AddTransactionScreen(
                 navController = navController,
-                repository = repository
+                repository = repository,
+                transactionId = args.transactionId
             )
         }
 

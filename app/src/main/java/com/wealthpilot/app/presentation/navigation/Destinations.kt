@@ -6,7 +6,9 @@ import kotlinx.serialization.Serializable
 object Home
 
 @Serializable
-object AddTransaction
+data class AddTransaction(
+    val transactionId: String? = null
+)
 
 @Serializable
 object Insights

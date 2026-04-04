@@ -25,10 +25,13 @@ fun HomeScreen(
     HomeContent(
         state = state,
         onAddClick = {
-            navController.navigate(AddTransaction)
+            navController.navigate(AddTransaction(null))
         },
         onDelete = {
             viewModel.deleteTransaction(it)
+        },
+        onEdit = {
+            navController.navigate(AddTransaction(it.id))
         }
     )
 }
