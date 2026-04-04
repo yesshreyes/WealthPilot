@@ -24,6 +24,7 @@ import com.wealthpilot.app.domain.model.TransactionType
 import com.wealthpilot.app.presentation.screens.home.components.CategoryData
 import com.wealthpilot.app.presentation.screens.home.components.SummaryCard
 import com.wealthpilot.app.presentation.screens.home.components.TransactionItem
+import com.wealthpilot.app.presentation.screens.home.components.WeeklyTrendIndicator
 
 @Composable
 fun HomeContent(
@@ -105,6 +106,7 @@ fun HomeContent(
                             }
                         }
                     }
+                    WeeklyTrendIndicator(state.weeklyTrend)
                     CategoryChart(state.categoryData)
                     LazyColumn(
                         modifier = Modifier

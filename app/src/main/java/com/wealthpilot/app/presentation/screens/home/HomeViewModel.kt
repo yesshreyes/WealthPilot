@@ -24,8 +24,8 @@ class HomeViewModel(
         repository.getAllTransactions()
             .onEach { transactions ->
                 val summary = calculateSummary(transactions)
-
                 val breakdown = getCategoryBreakdown(transactions)
+                val trend = calculateWeeklyTrend(transactions)
 
                 _uiState.update {
                     it.copy(
@@ -34,6 +34,7 @@ class HomeViewModel(
                         totalExpense = summary.expense,
                         balance = summary.balance,
                         categoryData = breakdown,
+                        weeklyTrend = trend,
                         isLoading = false
                     )
                 }
@@ -82,6 +83,30 @@ class HomeViewModel(
                     amount = list.sumOf { it.amount }
                 )
             }
+    }
+
+    private fun calculateWeeklyTrend(transactions: List<Transaction>): Double {
+
+        val now = System.currentTimeMillis()
+        val oneWeek = 7 * 24 * 60 * 60 * 1000L
+
+        val lastWeek = transactions.filter {
+            it.date in (now - oneWeek)..now
+        }
+
+        val previousWeek = transactions.filter {
+            it.date in (now - 2 * oneWeek)..(now - oneWeek)
+        }
+
+        val lastWeekExpense = lastWeek
+            .filter { it.type.name == "EXPENSE" }
+            .sumOf { it.amount }
+
+        val prevWeekExpense = previousWeek
+            .filter { it.type.name == "EXPENSE" }
+            .sumOf { it.amount }
+
+        return lastWeekExpense - prevWeekExpense
     }
 }
 

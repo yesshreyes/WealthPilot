@@ -13,6 +13,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.wealthpilot.app.domain.model.TransactionType
 
@@ -72,4 +73,27 @@ fun AddTransactionContent(
             Text("Save Transaction")
         }
     }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun AddTransactionContentPreview() {
+
+    val state = AddTransactionUiState(
+        amount = "500",
+        category = "Food",
+        type = TransactionType.EXPENSE,
+        notes = "Lunch",
+        isValid = true
+    )
+
+    AddTransactionContent(
+        state = state,
+        onAmountChange = {},
+        onCategoryChange = {},
+        onTypeChange = {},
+        onNotesChange = {},
+        onSave = {}
+    )
 }

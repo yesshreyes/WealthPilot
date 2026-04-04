@@ -10,5 +10,6 @@ data class HomeUiState(
     val balance: Double = 0.0,
     val isLoading: Boolean = false,
     val error: String? = null,
-    val categoryData: List<CategoryData> = emptyList()
+    val categoryData: List<CategoryData> = emptyList(),
+    val weeklyTrend: Double = 0.0
 )
