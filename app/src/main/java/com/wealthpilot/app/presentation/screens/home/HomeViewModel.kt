@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.wealthpilot.app.domain.model.Transaction
 import com.wealthpilot.app.domain.model.TransactionType
 import com.wealthpilot.app.domain.repository.TransactionRepository
+import com.wealthpilot.app.presentation.screens.home.components.CategoryData
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
@@ -16,28 +17,53 @@ class HomeViewModel(
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
 
     init {
+        observeTransactions()
+    }
+
+    private fun observeTransactions() {
         repository.getAllTransactions()
             .onEach { transactions ->
+                val summary = calculateSummary(transactions)
 
-                val income = transactions
-                    .filter { it.type == TransactionType.INCOME }
-                    .sumOf { it.amount }
-
-                val expense = transactions
-                    .filter { it.type == TransactionType.EXPENSE }
-                    .sumOf { it.amount }
+                val breakdown = getCategoryBreakdown(transactions)
 
                 _uiState.update {
                     it.copy(
                         transactions = transactions,
-                        totalIncome = income,
-                        totalExpense = expense,
-                        balance = income - expense,
+                        totalIncome = summary.income,
+                        totalExpense = summary.expense,
+                        balance = summary.balance,
+                        categoryData = breakdown,
                         isLoading = false
                     )
                 }
             }
+            .catch { e ->
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        error = e.message
+                    )
+                }
+            }
             .launchIn(viewModelScope)
+    }
+
+    private fun calculateSummary(transactions: List<Transaction>): Summary {
+
+        val income = transactions
+            .filter { it.type == TransactionType.INCOME }
+            .sumOf { it.amount }
+
+        val expense = transactions
+            .filter { it.type == TransactionType.EXPENSE }
+            .sumOf { it.amount }
+
+        return Summary(
+            income = income,
+            expense = expense,
+            balance = income - expense
+        )
     }
 
     fun deleteTransaction(transaction: Transaction) {
@@ -45,4 +71,22 @@ class HomeViewModel(
             repository.deleteTransaction(transaction)
         }
     }
+
+    private fun getCategoryBreakdown(transactions: List<Transaction>): List<CategoryData> {
+        return transactions
+            .filter { it.type.name == "EXPENSE" }
+            .groupBy { it.category }
+            .map { (category, list) ->
+                CategoryData(
+                    category = category,
+                    amount = list.sumOf { it.amount }
+                )
+            }
+    }
 }
+
+data class Summary(
+    val income: Double,
+    val expense: Double,
+    val balance: Double
+)

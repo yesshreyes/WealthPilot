@@ -1,4 +1,4 @@
-package com.wealthpilot.app.presentation.screens.home
+package com.wealthpilot.app.presentation.screens.home.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer

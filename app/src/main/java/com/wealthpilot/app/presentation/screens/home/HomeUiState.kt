@@ -1,6 +1,7 @@
 package com.wealthpilot.app.presentation.screens.home
 
 import com.wealthpilot.app.domain.model.Transaction
+import com.wealthpilot.app.presentation.screens.home.components.CategoryData
 
 data class HomeUiState(
     val transactions: List<Transaction> = emptyList(),
@@ -8,5 +9,6 @@ data class HomeUiState(
     val totalExpense: Double = 0.0,
     val balance: Double = 0.0,
     val isLoading: Boolean = false,
-    val error: String? = null
+    val error: String? = null,
+    val categoryData: List<CategoryData> = emptyList()
 )

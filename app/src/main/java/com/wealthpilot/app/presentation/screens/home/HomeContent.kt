@@ -9,16 +9,21 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.wealthpilot.app.domain.model.Transaction
+import com.wealthpilot.app.domain.model.TransactionType
+import com.wealthpilot.app.presentation.screens.home.components.CategoryData
+import com.wealthpilot.app.presentation.screens.home.components.SummaryCard
+import com.wealthpilot.app.presentation.screens.home.components.TransactionItem
 
 @Composable
 fun HomeContent(
@@ -55,7 +60,10 @@ fun HomeContent(
                         .padding(padding),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text("No transactions yet")
+                    Text(
+                        text = "No transactions yet",
+                        style = MaterialTheme.typography.bodyLarge
+                    )
                 }
             }
 
@@ -64,43 +72,44 @@ fun HomeContent(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(padding)
-                        .padding(16.dp)
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
 
                     Column(
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
 
-                        Card {
-                            Column(modifier = Modifier.padding(16.dp)) {
-                                Text("Balance")
-                                Text("₹${state.balance}")
+                        SummaryCard(
+                            title = "Balance",
+                            amount = state.balance
+                        )
+
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(12.dp),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+
+                            Box(modifier = Modifier.weight(1f)) {
+                                SummaryCard(
+                                    title = "Income",
+                                    amount = state.totalIncome
+                                )
                             }
-                        }
 
-                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-
-                            Card(modifier = Modifier.weight(1f)) {
-                                Column(modifier = Modifier.padding(16.dp)) {
-                                    Text("Income")
-                                    Text("₹${state.totalIncome}")
-                                }
-                            }
-
-                            Card(modifier = Modifier.weight(1f)) {
-                                Column(modifier = Modifier.padding(16.dp)) {
-                                    Text("Expense")
-                                    Text("₹${state.totalExpense}")
-                                }
+                            Box(modifier = Modifier.weight(1f)) {
+                                SummaryCard(
+                                    title = "Expense",
+                                    amount = state.totalExpense
+                                )
                             }
                         }
                     }
-
+                    CategoryChart(state.categoryData)
                     LazyColumn(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .weight(1f)
-                            .padding(top = 12.dp),
+                            .weight(1f),
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         items(state.transactions) { transaction ->
@@ -115,4 +124,52 @@ fun HomeContent(
             }
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun HomeContentPreview() {
+
+    val sampleTransactions = listOf(
+        Transaction(
+            amount = 500.0,
+            category = "Food",
+            type = TransactionType.EXPENSE,
+            date = System.currentTimeMillis(),
+            notes = "Lunch"
+        ),
+        Transaction(
+            amount = 2000.0,
+            category = "Salary",
+            type = TransactionType.INCOME,
+            date = System.currentTimeMillis(),
+            notes = "Monthly"
+        ),
+        Transaction(
+            amount = 300.0,
+            category = "Transport",
+            type = TransactionType.EXPENSE,
+            date = System.currentTimeMillis(),
+            notes = ""
+        )
+    )
+
+    val state = HomeUiState(
+        transactions = sampleTransactions,
+        totalIncome = 2000.0,
+        totalExpense = 800.0,
+        balance = 1200.0,
+        categoryData = listOf(
+            CategoryData("Food", 500.0),
+            CategoryData("Transport", 300.0)
+        ),
+        isLoading = false
+    )
+
+    HomeContent(
+        state = state,
+        onAddClick = {},
+        onDelete = {},
+        onEdit = {}
+    )
 }
