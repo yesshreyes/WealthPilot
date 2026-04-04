@@ -30,6 +30,7 @@ class HomeViewModel(
                 _uiState.update {
                     it.copy(
                         transactions = transactions,
+                        filteredTransactions = transactions,
                         totalIncome = summary.income,
                         totalExpense = summary.expense,
                         balance = summary.balance,
@@ -107,6 +108,54 @@ class HomeViewModel(
             .sumOf { it.amount }
 
         return lastWeekExpense - prevWeekExpense
+    }
+
+    fun onSearchChange(query: String) {
+        _uiState.update {
+            it.copy(searchQuery = query)
+        }
+        applyFilters()
+    }
+
+    fun onTypeFilterChange(type: TransactionType?) {
+        _uiState.update {
+            it.copy(selectedType = type)
+        }
+        applyFilters()
+    }
+
+    fun onCategoryFilterChange(category: String?) {
+        _uiState.update {
+            it.copy(selectedCategory = category)
+        }
+        applyFilters()
+    }
+
+    private fun applyFilters() {
+
+        val state = _uiState.value
+        val list = state.transactions
+
+        val filtered = list.filter { transaction ->
+
+            val matchesSearch = transaction.notes
+                ?.contains(state.searchQuery, ignoreCase = true)
+                ?: true
+
+            val matchesType = state.selectedType?.let {
+                transaction.type == it
+            } ?: true
+
+            val matchesCategory = state.selectedCategory?.let {
+                transaction.category == it
+            } ?: true
+
+            matchesSearch && matchesType && matchesCategory
+        }
+
+        _uiState.update {
+            it.copy(filteredTransactions = filtered)
+        }
     }
 }
 

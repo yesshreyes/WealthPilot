@@ -1,5 +1,7 @@
 package com.wealthpilot.app.presentation.screens.home
 
+import android.R.attr.padding
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.*
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.LocalContext
@@ -10,7 +12,8 @@ import com.wealthpilot.app.presentation.navigation.AddTransaction
 
 @Composable
 fun HomeScreen(
-    navController: NavController
+    navController: NavController,
+    padding: PaddingValues
 ) {
     val context = LocalContext.current
 
@@ -24,14 +27,18 @@ fun HomeScreen(
 
     HomeContent(
         state = state,
-        onAddClick = {
-            navController.navigate(AddTransaction(null))
-        },
+        padding = padding,
         onDelete = {
             viewModel.deleteTransaction(it)
         },
         onEdit = {
             navController.navigate(AddTransaction(it.id))
+        },
+        onSearchChange = {
+            viewModel.onSearchChange(it)
+        },
+        onTypeFilterChange = {
+            viewModel.onTypeFilterChange(it)
         }
     )
 }

@@ -26,7 +26,8 @@ fun WealthPilotNavGraph(
 
         composable<Home> {
             HomeScreen(
-                navController = navController
+                navController = navController,
+                padding = padding
             )
         }
 

@@ -3,15 +3,18 @@ package com.wealthpilot.app.presentation.screens.home
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,99 +32,103 @@ import com.wealthpilot.app.presentation.screens.home.components.WeeklyTrendIndic
 @Composable
 fun HomeContent(
     state: HomeUiState,
-    onAddClick: () -> Unit,
+    padding: PaddingValues,
     onDelete: (Transaction) -> Unit,
-    onEdit: (Transaction) -> Unit
+    onEdit: (Transaction) -> Unit,
+    onSearchChange: (String) -> Unit,
+    onTypeFilterChange: (TransactionType?) -> Unit
 ) {
 
-    Scaffold(
-        floatingActionButton = {
-            FloatingActionButton(onClick = onAddClick) {
-                Text("+")
+    if (state.isLoading) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator()
+        }
+        return
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(padding)
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+
+        SummaryCard("Balance", state.balance)
+
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Box(modifier = Modifier.weight(1f)) {
+                SummaryCard("Income", state.totalIncome)
+            }
+            Box(modifier = Modifier.weight(1f)) {
+                SummaryCard("Expense", state.totalExpense)
             }
         }
-    ) { padding ->
 
-        when {
-            state.isLoading -> {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(padding),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator()
-                }
+        WeeklyTrendIndicator(state.weeklyTrend)
+
+        CategoryChart(state.categoryData)
+
+        OutlinedTextField(
+            value = state.searchQuery,
+            onValueChange = onSearchChange,
+            label = { Text("Search notes") },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+
+            Button(onClick = { onTypeFilterChange(null) }) {
+                Text("All")
             }
 
-            state.transactions.isEmpty() -> {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(padding),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "No transactions yet",
-                        style = MaterialTheme.typography.bodyLarge
+            Button(onClick = { onTypeFilterChange(TransactionType.INCOME) }) {
+                Text("Income")
+            }
+
+            Button(onClick = { onTypeFilterChange(TransactionType.EXPENSE) }) {
+                Text("Expense")
+            }
+        }
+
+        if (state.filteredTransactions.isEmpty()) {
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "No results found",
+                    style = MaterialTheme.typography.bodyLarge
+                )
+            }
+
+        } else {
+
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                items(state.filteredTransactions) { transaction ->
+                    TransactionItem(
+                        transaction = transaction,
+                        onDelete = { onDelete(transaction) },
+                        onEdit = { onEdit(transaction) }
                     )
-                }
-            }
-
-            else -> {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(padding)
-                        .padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-
-                        SummaryCard(
-                            title = "Balance",
-                            amount = state.balance
-                        )
-
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(12.dp),
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-
-                            Box(modifier = Modifier.weight(1f)) {
-                                SummaryCard(
-                                    title = "Income",
-                                    amount = state.totalIncome
-                                )
-                            }
-
-                            Box(modifier = Modifier.weight(1f)) {
-                                SummaryCard(
-                                    title = "Expense",
-                                    amount = state.totalExpense
-                                )
-                            }
-                        }
-                    }
-                    WeeklyTrendIndicator(state.weeklyTrend)
-                    CategoryChart(state.categoryData)
-                    LazyColumn(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f),
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        items(state.transactions) { transaction ->
-                            TransactionItem(
-                                transaction = transaction,
-                                onDelete = { onDelete(transaction) },
-                                onEdit = { onEdit(transaction) }
-                            )
-                        }
-                    }
                 }
             }
         }
@@ -170,8 +177,10 @@ fun HomeContentPreview() {
 
     HomeContent(
         state = state,
-        onAddClick = {},
+        padding = PaddingValues(0.dp),
         onDelete = {},
-        onEdit = {}
+        onEdit = {},
+        onSearchChange = {},
+        onTypeFilterChange = {}
     )
 }

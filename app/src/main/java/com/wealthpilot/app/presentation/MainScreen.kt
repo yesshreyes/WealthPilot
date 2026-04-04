@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.rememberNavController
 import com.wealthpilot.app.presentation.navigation.BottomNavBar
 import com.wealthpilot.app.presentation.navigation.WealthPilotNavGraph
+import com.wealthpilot.app.presentation.navigation.AddTransaction
 
 @Composable
 fun MainScreen() {
@@ -14,6 +15,15 @@ fun MainScreen() {
     Scaffold(
         bottomBar = {
             BottomNavBar(navController)
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {
+                    navController.navigate(AddTransaction(null))
+                }
+            ) {
+                Text("+")
+            }
         }
     ) { padding ->
 

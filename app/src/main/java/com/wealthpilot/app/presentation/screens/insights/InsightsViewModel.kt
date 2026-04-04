@@ -49,7 +49,11 @@ class InsightsViewModel(
 
         val max = grouped.maxByOrNull { it.value }
 
-        return (max?.key to (max?.value ?: 0.0)) as Pair<String, Double>
+        return if (max != null) {
+            max.key to max.value
+        } else {
+            "" to 0.0
+        }
     }
 
     private fun getMonthlyTotal(transactions: List<Transaction>): Double {
