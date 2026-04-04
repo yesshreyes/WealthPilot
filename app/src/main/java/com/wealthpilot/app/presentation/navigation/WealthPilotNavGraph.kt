@@ -1,14 +1,16 @@
 package com.wealthpilot.app.presentation.navigation
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 
 @Composable
-fun WealthPilotNavGraph() {
-
-    val navController = rememberNavController()
+fun WealthPilotNavGraph(
+    navController: NavHostController,
+    padding: PaddingValues
+) {
 
     NavHost(
         navController = navController,
@@ -16,19 +18,19 @@ fun WealthPilotNavGraph() {
     ) {
 
         composable<Home> {
-            // TODO: Replace with HomeScreen()
+            // HomeScreen(padding)
         }
 
         composable<AddTransaction> {
-            // TODO: Replace with AddTransactionScreen()
+            // AddTransactionScreen()
         }
 
         composable<Insights> {
-            // TODO: Replace with InsightsScreen()
+            // InsightsScreen()
         }
 
         composable<Goal> {
-            // TODO: Replace with GoalScreen()
+            // GoalScreen()
         }
     }
 }
