@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.wealthpilot.app.data.repository.RepositoryProvider
 import com.wealthpilot.app.presentation.screens.add_transaction.AddTransactionScreen
+import com.wealthpilot.app.presentation.screens.home.HomeScreen
 
 @Composable
 fun WealthPilotNavGraph(
@@ -21,7 +22,9 @@ fun WealthPilotNavGraph(
     ) {
 
         composable<Home> {
-            // HomeScreen(padding)
+            HomeScreen(
+                navController = navController
+            )
         }
 
         composable<AddTransaction> {
@@ -35,11 +38,9 @@ fun WealthPilotNavGraph(
         }
 
         composable<Insights> {
-            // InsightsScreen()
         }
 
         composable<Goal> {
-            // GoalScreen()
         }
     }
 }

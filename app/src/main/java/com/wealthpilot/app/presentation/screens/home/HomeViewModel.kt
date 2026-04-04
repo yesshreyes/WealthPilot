@@ -1,26 +1,20 @@
 package com.wealthpilot.app.presentation.screens.home
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.wealthpilot.app.data.repository.RepositoryProvider
 import com.wealthpilot.app.domain.model.Transaction
+import com.wealthpilot.app.domain.repository.TransactionRepository
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
-class HomeViewModel(application: Application) : AndroidViewModel(application) {
-
-    private val repository = RepositoryProvider
-        .provideTransactionRepository(application)
+class HomeViewModel(
+    private val repository: TransactionRepository
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeUiState(isLoading = true))
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
 
     init {
-        observeTransactions()
-    }
-
-    private fun observeTransactions() {
         repository.getAllTransactions()
             .onEach { transactions ->
                 _uiState.update {
@@ -41,21 +35,9 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
             .launchIn(viewModelScope)
     }
 
-    fun addTransaction(transaction: Transaction) {
-        viewModelScope.launch {
-            repository.insertTransaction(transaction)
-        }
-    }
-
     fun deleteTransaction(transaction: Transaction) {
         viewModelScope.launch {
             repository.deleteTransaction(transaction)
-        }
-    }
-
-    fun updateTransaction(transaction: Transaction) {
-        viewModelScope.launch {
-            repository.updateTransaction(transaction)
         }
     }
 }
