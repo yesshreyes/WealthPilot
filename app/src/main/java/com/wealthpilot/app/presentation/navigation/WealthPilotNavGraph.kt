@@ -10,6 +10,7 @@ import androidx.navigation.toRoute
 import com.wealthpilot.app.data.repository.RepositoryProvider
 import com.wealthpilot.app.presentation.screens.add_transaction.AddTransactionScreen
 import com.wealthpilot.app.presentation.screens.home.HomeScreen
+import com.wealthpilot.app.presentation.screens.insights.InsightsScreen
 
 @Composable
 fun WealthPilotNavGraph(
@@ -43,6 +44,7 @@ fun WealthPilotNavGraph(
         }
 
         composable<Insights> {
+            InsightsScreen()
         }
 
         composable<Goal> {

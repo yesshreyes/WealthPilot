@@ -3,6 +3,7 @@ package com.wealthpilot.app.presentation.screens.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.wealthpilot.app.domain.model.Transaction
+import com.wealthpilot.app.domain.model.TransactionType
 import com.wealthpilot.app.domain.repository.TransactionRepository
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -17,18 +18,22 @@ class HomeViewModel(
     init {
         repository.getAllTransactions()
             .onEach { transactions ->
+
+                val income = transactions
+                    .filter { it.type == TransactionType.INCOME }
+                    .sumOf { it.amount }
+
+                val expense = transactions
+                    .filter { it.type == TransactionType.EXPENSE }
+                    .sumOf { it.amount }
+
                 _uiState.update {
                     it.copy(
                         transactions = transactions,
+                        totalIncome = income,
+                        totalExpense = expense,
+                        balance = income - expense,
                         isLoading = false
-                    )
-                }
-            }
-            .catch { e ->
-                _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        error = e.message
                     )
                 }
             }
