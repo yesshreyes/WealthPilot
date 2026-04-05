@@ -12,9 +12,5 @@ data class HomeUiState(
     val isLoading: Boolean = false,
     val error: String? = null,
     val categoryData: List<CategoryData> = emptyList(),
-    val weeklyTrend: Double = 0.0,
-    val searchQuery: String = "",
-    val selectedType: TransactionType? = null,
-    val selectedCategory: String? = null,
-    val filteredTransactions: List<Transaction> = emptyList()
+    val weeklyTrend: Double = 0.0
 )

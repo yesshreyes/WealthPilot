@@ -41,13 +41,10 @@ import java.util.Locale
 fun HomeContent(
     state: HomeUiState,
     padding: PaddingValues,
-    onDelete: (Transaction) -> Unit,
-    onEdit: (Transaction) -> Unit,
-    onSearchChange: (String) -> Unit,
-    onTypeFilterChange: (TransactionType?) -> Unit
+    onViewTransactions: () -> Unit
 ) {
 
-    var selectedTransaction by remember { mutableStateOf<Transaction?>(null) }
+
 
     if (state.isLoading) {
         Box(
@@ -87,97 +84,11 @@ fun HomeContent(
 
         CategoryChart(state.categoryData)
 
-        OutlinedTextField(
-            value = state.searchQuery,
-            onValueChange = onSearchChange,
-            label = { Text("Search notes") },
+        Button(
+            onClick = onViewTransactions,
             modifier = Modifier.fillMaxWidth()
-        )
-
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-
-            Button(onClick = { onTypeFilterChange(null) }) {
-                Text("All")
-            }
-
-            Button(onClick = { onTypeFilterChange(TransactionType.INCOME) }) {
-                Text("Income")
-            }
-
-            Button(onClick = { onTypeFilterChange(TransactionType.EXPENSE) }) {
-                Text("Expense")
-            }
-        }
-
-        if (state.filteredTransactions.isEmpty()) {
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = "No results found",
-                    style = MaterialTheme.typography.bodyLarge
-                )
-            }
-
-        } else {
-
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                items(state.filteredTransactions) { transaction ->
-                    TransactionItem(
-                        transaction = transaction,
-                        onDelete = { onDelete(transaction) },
-                        onEdit = { onEdit(transaction) },
-                        onClick = {
-                            selectedTransaction = transaction
-                        }
-                    )
-                }
-            }
-        }
-        selectedTransaction?.let { txn ->
-
-            val formatter = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
-
-            AlertDialog(
-                onDismissRequest = { selectedTransaction = null },
-                confirmButton = {
-                    Button(onClick = {
-                        selectedTransaction = null
-                        onEdit(txn)
-                    }) {
-                        Text("Edit")
-                    }
-                },
-                dismissButton = {
-                    Button(onClick = { selectedTransaction = null }) {
-                        Text("Close")
-                    }
-                },
-                title = {
-                    Text("Transaction Details")
-                },
-                text = {
-                    Column {
-                        Text("Amount: ₹${txn.amount}")
-                        Text("Category: ${txn.category}")
-                        Text("Date: ${formatter.format(Date(txn.date))}")
-                        if (!txn.notes.isNullOrEmpty()) {
-                            Text("Notes: ${txn.notes}")
-                        }
-                    }
-                }
-            )
+            Text("View Transactions")
         }
     }
 }
@@ -225,9 +136,6 @@ fun HomeContentPreview() {
     HomeContent(
         state = state,
         padding = PaddingValues(0.dp),
-        onDelete = {},
-        onEdit = {},
-        onSearchChange = {},
-        onTypeFilterChange = {}
+        onViewTransactions = {}
     )
 }

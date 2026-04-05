@@ -8,7 +8,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.wealthpilot.app.data.repository.RepositoryProvider
-import com.wealthpilot.app.presentation.navigation.AddTransaction
+import com.wealthpilot.app.presentation.navigation.Transactions
 
 @Composable
 fun HomeScreen(
@@ -28,17 +28,8 @@ fun HomeScreen(
     HomeContent(
         state = state,
         padding = padding,
-        onDelete = {
-            viewModel.deleteTransaction(it)
-        },
-        onEdit = {
-            navController.navigate(AddTransaction(it.id))
-        },
-        onSearchChange = {
-            viewModel.onSearchChange(it)
-        },
-        onTypeFilterChange = {
-            viewModel.onTypeFilterChange(it)
+        onViewTransactions = {
+            navController.navigate(Transactions)
         }
     )
 }

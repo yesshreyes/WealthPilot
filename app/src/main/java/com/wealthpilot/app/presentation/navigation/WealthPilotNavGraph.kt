@@ -12,6 +12,7 @@ import com.wealthpilot.app.presentation.screens.add_transaction.AddTransactionSc
 import com.wealthpilot.app.presentation.screens.goal.GoalScreen
 import com.wealthpilot.app.presentation.screens.home.HomeScreen
 import com.wealthpilot.app.presentation.screens.insights.InsightsScreen
+import com.wealthpilot.app.presentation.screens.transactions.TransactionsScreen
 
 @Composable
 fun WealthPilotNavGraph(
@@ -42,6 +43,12 @@ fun WealthPilotNavGraph(
                 navController = navController,
                 repository = repository,
                 transactionId = args.transactionId
+            )
+        }
+
+        composable<Transactions> {
+            TransactionsScreen(
+                navController = navController
             )
         }
 

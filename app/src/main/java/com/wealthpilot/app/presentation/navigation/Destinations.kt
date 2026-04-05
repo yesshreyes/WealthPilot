@@ -11,6 +11,9 @@ data class AddTransaction(
 )
 
 @Serializable
+object Transactions
+
+@Serializable
 object Insights
 
 @Serializable
