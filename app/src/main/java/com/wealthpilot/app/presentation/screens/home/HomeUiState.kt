@@ -2,7 +2,7 @@ package com.wealthpilot.app.presentation.screens.home
 
 import com.wealthpilot.app.domain.model.Transaction
 import com.wealthpilot.app.domain.model.TransactionType
-import com.wealthpilot.app.presentation.screens.home.components.CategoryData
+import com.wealthpilot.app.domain.model.CategoryData
 
 data class HomeUiState(
     val transactions: List<Transaction> = emptyList(),

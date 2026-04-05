@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.wealthpilot.app.domain.model.Transaction
 import com.wealthpilot.app.domain.model.TransactionType
 import com.wealthpilot.app.domain.repository.TransactionRepository
-import com.wealthpilot.app.presentation.screens.home.components.CategoryData
+import com.wealthpilot.app.domain.model.CategoryData
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 

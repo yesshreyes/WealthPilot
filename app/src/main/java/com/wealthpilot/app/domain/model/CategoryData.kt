@@ -1,4 +1,4 @@
-package com.wealthpilot.app.presentation.screens.home.components
+package com.wealthpilot.app.domain.model
 
 data class CategoryData(
     val category: String,
