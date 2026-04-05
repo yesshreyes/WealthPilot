@@ -29,7 +29,7 @@ fun GoalContent(
     ) {
 
         Text(
-            text = "Monthly Saving Goal",
+            text = "Monthly Spending Goal",
             style = MaterialTheme.typography.titleLarge
         )
 
@@ -49,9 +49,9 @@ fun GoalContent(
 
         if (state.isGoalSet) {
 
-            Text("Saved: ₹${state.savedAmount}")
+            Text("Spent: ₹${state.spentAmount}")
 
-            val remaining = (state.goalAmount.toDoubleOrNull() ?: 0.0) - state.savedAmount
+            val remaining = (state.goalAmount.toDoubleOrNull() ?: 0.0) - state.spentAmount
 
             Text("Remaining: ₹${remaining.coerceAtLeast(0.0)}")
 

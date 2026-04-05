@@ -12,7 +12,8 @@ fun GoalScreen() {
 
     val viewModel: GoalViewModel = viewModel(
         factory = GoalViewModelFactory(
-            RepositoryProvider.provideTransactionRepository(context)
+            RepositoryProvider.provideTransactionRepository(context),
+            context
         )
     )
 
