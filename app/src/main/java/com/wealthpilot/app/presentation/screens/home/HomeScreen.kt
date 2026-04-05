@@ -8,6 +8,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.wealthpilot.app.data.repository.RepositoryProvider
+import com.wealthpilot.app.presentation.navigation.AddTransaction
 import com.wealthpilot.app.presentation.navigation.Settings
 import com.wealthpilot.app.presentation.navigation.Transactions
 
@@ -34,6 +35,9 @@ fun HomeScreen(
         },
         onNavigateSettings = {
             navController.navigate(Settings)
+        },
+        onAddTransaction = {
+            navController.navigate(AddTransaction(null))
         }
     )
 }

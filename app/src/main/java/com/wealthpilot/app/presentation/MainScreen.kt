@@ -16,15 +16,15 @@ fun MainScreen() {
         bottomBar = {
             BottomNavBar(navController)
         },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    navController.navigate(AddTransaction(null))
-                }
-            ) {
-                Text("+")
-            }
-        }
+//        floatingActionButton = {
+//            FloatingActionButton(
+//                onClick = {
+//                    navController.navigate(AddTransaction(null))
+//                }
+//            ) {
+//                Text("+")
+//            }
+//        }
     ) { padding ->
 
         WealthPilotNavGraph(
