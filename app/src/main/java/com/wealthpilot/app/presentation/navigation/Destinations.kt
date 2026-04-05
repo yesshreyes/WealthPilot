@@ -18,3 +18,6 @@ object Insights
 
 @Serializable
 object Goal
+
+@Serializable
+object Settings

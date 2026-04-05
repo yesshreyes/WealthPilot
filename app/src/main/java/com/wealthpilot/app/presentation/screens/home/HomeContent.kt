@@ -35,38 +35,56 @@ import com.wealthpilot.app.presentation.screens.home.components.TransactionItem
 import com.wealthpilot.app.presentation.screens.home.components.WeeklyTrendIndicator
 import java.text.SimpleDateFormat
 import java.util.Date
-import java.util.Locale
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.TopAppBar
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeContent(
     state: HomeUiState,
     padding: PaddingValues,
-    onViewTransactions: () -> Unit
+    onViewTransactions: () -> Unit,
+    onNavigateSettings: () -> Unit
 ) {
 
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("WealthPilot") },
+                actions = {
+                    IconButton(onClick = onNavigateSettings) {
+                        Icon(imageVector = Icons.Default.Settings, contentDescription = "Settings")
+                    }
+                }
+            )
+        },
+        modifier = Modifier.padding(padding)
+    ) { innerPadding ->
+        if (state.isLoading) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+            return@Scaffold
+        }
 
-
-    if (state.isLoading) {
-        Box(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding),
-            contentAlignment = Alignment.Center
+                .padding(innerPadding)
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            CircularProgressIndicator()
-        }
-        return
-    }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(padding)
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-
-        SummaryCard("Balance", state.balance)
+            SummaryCard("Balance", state.balance)
 
         Row(
             horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -91,6 +109,7 @@ fun HomeContent(
             Text("View Transactions")
         }
     }
+}
 }
 
 @Preview(showBackground = true)
@@ -136,6 +155,7 @@ fun HomeContentPreview() {
     HomeContent(
         state = state,
         padding = PaddingValues(0.dp),
-        onViewTransactions = {}
+        onViewTransactions = {},
+        onNavigateSettings = {}
     )
 }
