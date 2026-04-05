@@ -12,36 +12,28 @@ class InsightsViewModel(
     private val repository: TransactionRepository
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(InsightsUiState(isLoading = true))
-    val uiState: StateFlow<InsightsUiState> = _uiState.asStateFlow()
-
-    init {
-        observeTransactions()
-    }
-
-    private fun observeTransactions() {
-        repository.getAllTransactions()
-            .onEach { transactions ->
-                val expenses = transactions.filter {
-                    it.type == TransactionType.EXPENSE
-                }
-
-                val highest = getHighestCategory(expenses)
-                val monthly = getMonthlyTotal(expenses)
-                val frequent = getFrequentCategory(expenses)
-
-                _uiState.update {
-                    it.copy(
-                        highestCategory = highest.first,
-                        highestAmount = highest.second,
-                        monthlyTotal = monthly,
-                        frequentCategory = frequent,
-                        isLoading = false
-                    )
-                }
+    val uiState: StateFlow<InsightsUiState> = repository.getAllTransactions()
+        .map { transactions ->
+            val expenses = transactions.filter {
+                it.type == TransactionType.EXPENSE
             }
-            .launchIn(viewModelScope)
-    }
+            val highest = getHighestCategory(expenses)
+            val monthly = getMonthlyTotal(expenses)
+            val frequent = getFrequentCategory(expenses)
+
+            InsightsUiState(
+                highestCategory = highest.first,
+                highestAmount = highest.second,
+                monthlyTotal = monthly,
+                frequentCategory = frequent,
+                isLoading = false
+            )
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = InsightsUiState(isLoading = true)
+        )
 
     private fun getHighestCategory(transactions: List<Transaction>): Pair<String, Double> {
         val grouped = transactions.groupBy { it.category }

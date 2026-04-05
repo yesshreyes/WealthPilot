@@ -1,5 +1,6 @@
 package com.wealthpilot.app.presentation.screens.home.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,7 +26,8 @@ import java.util.Locale
 fun TransactionItem(
     transaction: Transaction,
     onDelete: () -> Unit,
-    onEdit: () -> Unit
+    onEdit: () -> Unit,
+    onClick: () -> Unit
 ) {
 
     val dismissState = rememberSwipeToDismissBoxState(
@@ -44,7 +46,9 @@ fun TransactionItem(
         backgroundContent = {},
         content = {
             Card(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onClick() }
             ) {
                 Column(
                     modifier = Modifier.padding(16.dp)

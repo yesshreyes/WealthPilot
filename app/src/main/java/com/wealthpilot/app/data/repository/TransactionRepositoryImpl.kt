@@ -13,8 +13,9 @@ class TransactionRepositoryImpl(
 ) : TransactionRepository {
 
     override fun getAllTransactions(): Flow<List<Transaction>> {
-        return dao.getAllTransactions()
-            .map { list -> list.map { it.toDomain() } }
+        return dao.getAllTransactions().map { list ->
+            list.map { it.toDomain() }
+        }
     }
 
     override suspend fun insertTransaction(transaction: Transaction) {

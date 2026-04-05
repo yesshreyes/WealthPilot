@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
@@ -18,6 +19,10 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -28,6 +33,9 @@ import com.wealthpilot.app.presentation.screens.home.components.CategoryData
 import com.wealthpilot.app.presentation.screens.home.components.SummaryCard
 import com.wealthpilot.app.presentation.screens.home.components.TransactionItem
 import com.wealthpilot.app.presentation.screens.home.components.WeeklyTrendIndicator
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @Composable
 fun HomeContent(
@@ -38,6 +46,8 @@ fun HomeContent(
     onSearchChange: (String) -> Unit,
     onTypeFilterChange: (TransactionType?) -> Unit
 ) {
+
+    var selectedTransaction by remember { mutableStateOf<Transaction?>(null) }
 
     if (state.isLoading) {
         Box(
@@ -127,10 +137,47 @@ fun HomeContent(
                     TransactionItem(
                         transaction = transaction,
                         onDelete = { onDelete(transaction) },
-                        onEdit = { onEdit(transaction) }
+                        onEdit = { onEdit(transaction) },
+                        onClick = {
+                            selectedTransaction = transaction
+                        }
                     )
                 }
             }
+        }
+        selectedTransaction?.let { txn ->
+
+            val formatter = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
+
+            AlertDialog(
+                onDismissRequest = { selectedTransaction = null },
+                confirmButton = {
+                    Button(onClick = {
+                        selectedTransaction = null
+                        onEdit(txn)
+                    }) {
+                        Text("Edit")
+                    }
+                },
+                dismissButton = {
+                    Button(onClick = { selectedTransaction = null }) {
+                        Text("Close")
+                    }
+                },
+                title = {
+                    Text("Transaction Details")
+                },
+                text = {
+                    Column {
+                        Text("Amount: ₹${txn.amount}")
+                        Text("Category: ${txn.category}")
+                        Text("Date: ${formatter.format(Date(txn.date))}")
+                        if (!txn.notes.isNullOrEmpty()) {
+                            Text("Notes: ${txn.notes}")
+                        }
+                    }
+                }
+            )
         }
     }
 }

@@ -65,7 +65,7 @@ class AddTransactionViewModel(
                 amount = state.amount.toDouble(),
                 category = state.category,
                 type = state.type,
-                date = System.currentTimeMillis(),
+                date = state.date,
                 notes = state.notes
             )
 
