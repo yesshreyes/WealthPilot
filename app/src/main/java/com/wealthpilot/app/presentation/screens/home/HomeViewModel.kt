@@ -8,6 +8,7 @@ import com.wealthpilot.app.domain.repository.TransactionRepository
 import com.wealthpilot.app.domain.model.CategoryData
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import java.util.Calendar
 
 class HomeViewModel(
     private val repository: TransactionRepository
@@ -23,13 +24,24 @@ class HomeViewModel(
     private fun observeTransactions() {
         repository.getAllTransactions()
             .onEach { transactions ->
-                val summary = calculateSummary(transactions)
-                val breakdown = getCategoryBreakdown(transactions)
+                val calendar = Calendar.getInstance()
+                val currentMonth = calendar.get(Calendar.MONTH)
+                val currentYear = calendar.get(Calendar.YEAR)
+
+                val currentMonthTransactions = transactions.filter {
+                    val cal = Calendar.getInstance()
+                    cal.timeInMillis = it.date
+                    cal.get(Calendar.MONTH) == currentMonth &&
+                            cal.get(Calendar.YEAR) == currentYear
+                }
+
+                val summary = calculateSummary(currentMonthTransactions)
+                val breakdown = getCategoryBreakdown(currentMonthTransactions)
                 val trend = calculateWeeklyTrend(transactions)
 
                 _uiState.update {
                     it.copy(
-                        transactions = transactions,
+                        transactions = currentMonthTransactions,
                         totalIncome = summary.income,
                         totalExpense = summary.expense,
                         balance = summary.balance,

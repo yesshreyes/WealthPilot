@@ -14,8 +14,19 @@ class InsightsViewModel(
 ) : ViewModel() {
 
     val uiState: StateFlow<InsightsUiState> = repository.getAllTransactions()
-        .map { transactions ->
-            val expenses = transactions.filter {
+        .map { allTransactions ->
+            val calendar = Calendar.getInstance()
+            val currentMonth = calendar.get(Calendar.MONTH)
+            val currentYear = calendar.get(Calendar.YEAR)
+
+            val currentMonthTransactions = allTransactions.filter {
+                val cal = Calendar.getInstance()
+                cal.timeInMillis = it.date
+                cal.get(Calendar.MONTH) == currentMonth &&
+                        cal.get(Calendar.YEAR) == currentYear
+            }
+
+            val expenses = currentMonthTransactions.filter {
                 it.type == TransactionType.EXPENSE
             }
             val highest = getHighestCategory(expenses)
