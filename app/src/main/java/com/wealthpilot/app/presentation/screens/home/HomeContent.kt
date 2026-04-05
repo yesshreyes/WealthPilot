@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
@@ -20,7 +22,6 @@ import androidx.compose.ui.unit.dp
 import com.wealthpilot.app.domain.model.Transaction
 import com.wealthpilot.app.domain.model.TransactionType
 import com.wealthpilot.app.presentation.screens.home.components.SummaryCard
-import com.wealthpilot.app.presentation.screens.home.components.WeeklyTrendIndicator
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -45,13 +46,17 @@ fun HomeContent(
                 title = { Text("WealthPilot") },
                 actions = {
                     IconButton(onClick = onNavigateSettings) {
-                        Icon(imageVector = Icons.Default.Settings, contentDescription = "Settings")
+                        Icon(
+                            imageVector = Icons.Default.Settings,
+                            contentDescription = "Settings"
+                        )
                     }
                 }
             )
         },
         modifier = Modifier.padding(padding)
     ) { innerPadding ->
+
         if (state.isLoading) {
             Box(
                 modifier = Modifier
@@ -68,36 +73,35 @@ fun HomeContent(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(16.dp),
+                .padding(16.dp)
+                .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
 
             SummaryCard("Balance", state.balance)
 
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Box(modifier = Modifier.weight(1f)) {
-                SummaryCard("Income", state.totalIncome)
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Box(modifier = Modifier.weight(1f)) {
+                    SummaryCard("Income", state.totalIncome)
+                }
+                Box(modifier = Modifier.weight(1f)) {
+                    SummaryCard("Expense", state.totalExpense)
+                }
             }
-            Box(modifier = Modifier.weight(1f)) {
-                SummaryCard("Expense", state.totalExpense)
-            }
-        }
-
-        WeeklyTrendIndicator(state.weeklyTrend)
 
             CategoryChart(state.categoryData)
 
-        Button(
-            onClick = onViewTransactions,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("View Transactions")
+            Button(
+                onClick = onViewTransactions,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("View Transactions")
+            }
         }
     }
-}
 }
 
 @Preview(showBackground = true)

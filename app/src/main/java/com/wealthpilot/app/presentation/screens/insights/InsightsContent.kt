@@ -54,7 +54,7 @@ fun InsightsContent(
                 )
 
                 InsightCard(
-                    title = "Monthly Total",
+                    title = "Total Spent",
                     value = "₹${state.monthlyTotal}"
                 )
 

@@ -34,7 +34,6 @@ class HomeViewModel(
                         totalExpense = summary.expense,
                         balance = summary.balance,
                         categoryData = breakdown,
-                        weeklyTrend = trend,
                         isLoading = false
                     )
                 }

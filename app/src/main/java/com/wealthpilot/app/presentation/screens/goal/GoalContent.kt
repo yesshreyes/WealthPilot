@@ -30,7 +30,7 @@ fun GoalContent(
     ) {
 
         Text(
-            text = "Monthly Spending Goal",
+            text = "Spending Goal",
             style = MaterialTheme.typography.titleLarge
         )
 
