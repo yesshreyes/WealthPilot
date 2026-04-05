@@ -2,6 +2,7 @@ package com.wealthpilot.app.presentation.screens.insights
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.wealthpilot.app.domain.model.CategoryData
 import com.wealthpilot.app.domain.model.Transaction
 import com.wealthpilot.app.domain.model.TransactionType
 import com.wealthpilot.app.domain.repository.TransactionRepository
@@ -20,13 +21,19 @@ class InsightsViewModel(
             val highest = getHighestCategory(expenses)
             val monthly = getMonthlyTotal(expenses)
             val frequent = getFrequentCategory(expenses)
+            
+            val categoryDataList = expenses.groupBy { it.category }
+                .map { (category, txns) ->
+                    CategoryData(category = category, amount = txns.sumOf { it.amount })
+                }.sortedByDescending { it.amount }
 
             InsightsUiState(
                 highestCategory = highest.first,
                 highestAmount = highest.second,
                 monthlyTotal = monthly,
                 frequentCategory = frequent,
-                isLoading = false
+                isLoading = false,
+                categoryBreakdown = categoryDataList
             )
         }
         .stateIn(
