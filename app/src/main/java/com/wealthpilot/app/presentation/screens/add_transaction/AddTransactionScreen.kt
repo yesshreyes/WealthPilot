@@ -33,6 +33,7 @@ fun AddTransactionScreen(
         onCategoryChange = viewModel::onCategoryChange,
         onTypeChange = viewModel::onTypeChange,
         onNotesChange = viewModel::onNotesChange,
+        onDateChange = viewModel::onDateChange,
         onSave = {
             viewModel.saveTransaction(transactionId) {
                 navController.popBackStack()

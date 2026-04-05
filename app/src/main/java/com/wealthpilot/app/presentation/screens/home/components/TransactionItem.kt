@@ -16,6 +16,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.wealthpilot.app.domain.model.Transaction
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -34,6 +37,8 @@ fun TransactionItem(
         }
     )
 
+    val formatter = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
+
     SwipeToDismissBox(
         state = dismissState,
         backgroundContent = {},
@@ -50,6 +55,10 @@ fun TransactionItem(
                     Spacer(modifier = Modifier.height(4.dp))
 
                     Text(text = "₹${transaction.amount}")
+
+                    Spacer(modifier = Modifier.height(4.dp))
+
+                    Text(text = formatter.format(Date(transaction.date)))
 
                     Spacer(modifier = Modifier.height(8.dp))
 

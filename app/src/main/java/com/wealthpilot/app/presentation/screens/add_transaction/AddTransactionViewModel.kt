@@ -93,4 +93,10 @@ class AddTransactionViewModel(
             }
         }
     }
+
+    fun onDateChange(date: Long) {
+        _uiState.update {
+            it.copy(date = date)
+        }
+    }
 }
