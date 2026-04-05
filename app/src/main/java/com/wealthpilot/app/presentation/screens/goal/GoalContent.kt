@@ -12,6 +12,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -66,4 +67,19 @@ fun GoalContent(
             )
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun GoalContentPreview() {
+    GoalContent(
+        state = GoalUiState(
+            goalAmount = "10000",
+            spentAmount = 4500.0,
+            progress = 0.45f,
+            isGoalSet = true
+        ),
+        onGoalChange = {},
+        onSetGoal = {}
+    )
 }

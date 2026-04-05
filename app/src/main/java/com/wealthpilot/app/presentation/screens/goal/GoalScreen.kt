@@ -1,5 +1,9 @@
 package com.wealthpilot.app.presentation.screens.goal
 
+import android.Manifest
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -16,6 +20,17 @@ fun GoalScreen() {
             context
         )
     )
+
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission(),
+        onResult = {}
+    )
+
+    LaunchedEffect(Unit) {
+        if (Build.VERSION.SDK_INT >= 33) {
+            launcher.launch(Manifest.permission.POST_NOTIFICATIONS)
+        }
+    }
 
     val state by viewModel.uiState.collectAsState()
 

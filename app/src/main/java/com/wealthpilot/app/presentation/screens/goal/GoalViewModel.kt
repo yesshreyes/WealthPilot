@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.wealthpilot.app.domain.model.Transaction
 import com.wealthpilot.app.domain.model.TransactionType
 import com.wealthpilot.app.domain.repository.TransactionRepository
+import com.wealthpilot.app.utils.NotificationHelper
 import kotlinx.coroutines.flow.*
 import java.util.*
 
@@ -21,6 +22,8 @@ class GoalViewModel(
     private val prefs = context.getSharedPreferences("goal_prefs", Context.MODE_PRIVATE)
 
     private var goalValue: Double = 0.0
+
+    private var hasNotified = false
 
     init {
         loadGoal()
@@ -82,6 +85,15 @@ class GoalViewModel(
                 } else 0f
 
                 val isExceeded = goalValue > 0 && expense > goalValue
+
+                if (isExceeded && !hasNotified) {
+                    NotificationHelper.showGoalExceeded(context)
+                    hasNotified = true
+                }
+
+                if (!isExceeded) {
+                    hasNotified = false
+                }
 
                 _uiState.update {
                     it.copy(
