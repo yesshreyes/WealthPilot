@@ -28,4 +28,8 @@ class TransactionRepositoryImpl(
     override suspend fun deleteTransaction(transaction: Transaction) {
         dao.delete(transaction.toEntity())
     }
+
+    override suspend fun getTransactionById(id: String): Transaction? {
+        return dao.getTransactionById(id)?.toDomain()
+    }
 }

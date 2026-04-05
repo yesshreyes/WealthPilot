@@ -60,27 +60,37 @@ class AddTransactionViewModel(
         if (!state.isValid) return
 
         viewModelScope.launch {
-            repository.insertTransaction(
-                Transaction(
-                    id = existingId ?: java.util.UUID.randomUUID().toString(),
-                    amount = state.amount.toDouble(),
-                    category = state.category,
-                    type = state.type,
-                    date = System.currentTimeMillis(),
-                    notes = state.notes
-                )
+            val transaction = Transaction(
+                id = existingId ?: java.util.UUID.randomUUID().toString(),
+                amount = state.amount.toDouble(),
+                category = state.category,
+                type = state.type,
+                date = System.currentTimeMillis(),
+                notes = state.notes
             )
+
+            if (existingId == null) {
+                repository.insertTransaction(transaction)
+            } else {
+                repository.updateTransaction(transaction)
+            }
+
             onSaved()
         }
     }
 
-    fun loadTransaction(transaction: Transaction) {
-        _uiState.value = AddTransactionUiState(
-            amount = transaction.amount.toString(),
-            category = transaction.category,
-            type = transaction.type,
-            notes = transaction.notes ?: "",
-            isValid = true
-        )
+    fun loadTransaction(id: String) {
+        viewModelScope.launch {
+            val transaction = repository.getTransactionById(id)
+            transaction?.let {
+                _uiState.value = AddTransactionUiState(
+                    amount = it.amount.toString(),
+                    category = it.category,
+                    type = it.type,
+                    notes = it.notes ?: "",
+                    isValid = true
+                )
+            }
+        }
     }
 }

@@ -1,6 +1,7 @@
 package com.wealthpilot.app.presentation.screens.add_transaction
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -19,6 +20,12 @@ fun AddTransactionScreen(
     }
 
     val state by viewModel.uiState.collectAsState()
+
+    LaunchedEffect(transactionId) {
+        if (transactionId != null) {
+            viewModel.loadTransaction(transactionId)
+        }
+    }
 
     AddTransactionContent(
         state = state,
