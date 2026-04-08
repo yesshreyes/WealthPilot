@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -21,6 +22,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBalance
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.ArrowDownward
+import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -54,7 +57,6 @@ import com.wealthpilot.app.ui.theme.WealthPilotTheme
 @Composable
 fun HomeContent(
     state: HomeUiState,
-    padding: PaddingValues,
     onViewTransactions: () -> Unit,
     onNavigateSettings: () -> Unit,
     onAddTransaction: () -> Unit = {}
@@ -139,7 +141,6 @@ fun HomeContent(
                 Icon(Icons.Default.Add, "Add Transaction")
             }
         },
-        modifier = Modifier.padding(padding)
     ) { innerPadding ->
         if (state.isLoading) {
             Box(
@@ -179,29 +180,127 @@ fun HomeContent(
 
             Spacer(modifier = Modifier.height(4.dp))
 
-            SummaryCard(
-                title = "Total Balance",
-                amount = state.balance,
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                modifier = Modifier.fillMaxWidth()
+            // Unified Dashboard Card
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .shadow(
+                        elevation = 16.dp,
+                        shape = RoundedCornerShape(32.dp),
+                        ambientColor = colors.primary.copy(alpha = 0.2f),
+                        spotColor = colors.primary.copy(alpha = 0.15f)
+                    ),
+                shape = RoundedCornerShape(32.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = colors.surface.copy(alpha = 0.8f)
+                ),
+                border = BorderStroke(
+                    width = 1.5.dp,
+                    brush = Brush.linearGradient(
+                        colors = listOf(
+                            colors.primary.copy(alpha = 0.3f),
+                            colors.tertiary.copy(alpha = 0.05f)
+                        )
+                    )
+                )
             ) {
-                Box(modifier = Modifier.weight(1f)) {
-                    SummaryCard(
-                        title = "Income",
-                        amount = state.totalIncome,
-                        isIncome = true
+                Column(
+                    modifier = Modifier.padding(28.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "Total Balance",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Medium,
+                        color = colors.onSurface.copy(alpha = 0.6f)
                     )
-                }
-                Box(modifier = Modifier.weight(1f)) {
-                    SummaryCard(
-                        title = "Expense",
-                        amount = state.totalExpense,
-                        isExpense = true
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = "₹${state.balance.toInt()}",
+                        style = MaterialTheme.typography.displayMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = colors.onSurface
                     )
+
+                    Spacer(modifier = Modifier.height(32.dp))
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        // Income column
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(14.dp)
+                        ) {
+                            Surface(
+                                shape = CircleShape,
+                                color = colors.primary.copy(alpha = 0.15f),
+                                modifier = Modifier.size(46.dp)
+                            ) {
+                                Icon(
+                                    Icons.Default.ArrowDownward,
+                                    null,
+                                    tint = colors.primary,
+                                    modifier = Modifier.padding(10.dp)
+                                )
+                            }
+                            Column {
+                                Text(
+                                    "Income",
+                                    style = MaterialTheme.typography.labelMedium,
+                                    color = colors.onSurface.copy(alpha = 0.5f)
+                                )
+                                Text(
+                                    "₹${state.totalIncome.toInt()}",
+                                    style = MaterialTheme.typography.titleLarge,
+                                    fontWeight = FontWeight.Bold,
+                                    color = colors.primary
+                                )
+                            }
+                        }
+
+                        // Divider
+                        Box(
+                            modifier = Modifier
+                                .height(46.dp)
+                                .width(1.dp)
+                                .background(colors.onSurface.copy(alpha = 0.1f))
+                        )
+
+                        // Expense column
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(14.dp)
+                        ) {
+                            Column(horizontalAlignment = Alignment.End) {
+                                Text(
+                                    "Expense",
+                                    style = MaterialTheme.typography.labelMedium,
+                                    color = colors.onSurface.copy(alpha = 0.5f)
+                                )
+                                Text(
+                                    "₹${state.totalExpense.toInt()}",
+                                    style = MaterialTheme.typography.titleLarge,
+                                    fontWeight = FontWeight.Bold,
+                                    color = colors.error
+                                )
+                            }
+                            Surface(
+                                shape = CircleShape,
+                                color = colors.error.copy(alpha = 0.15f),
+                                modifier = Modifier.size(46.dp)
+                            ) {
+                                Icon(
+                                    Icons.Default.ArrowUpward,
+                                    null,
+                                    tint = colors.error,
+                                    modifier = Modifier.padding(10.dp)
+                                )
+                            }
+                        }
+                    }
                 }
             }
 
@@ -288,7 +387,6 @@ fun HomeContentPreview() {
 
         HomeContent(
             state = state,
-            padding = PaddingValues(0.dp),
             onViewTransactions = {},
             onNavigateSettings = {}
         )

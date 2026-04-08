@@ -1,7 +1,6 @@
 package com.wealthpilot.app.presentation.screens.home
 
-import android.R.attr.padding
-import androidx.compose.foundation.layout.PaddingValues
+
 import androidx.compose.runtime.*
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.LocalContext
@@ -14,8 +13,7 @@ import com.wealthpilot.app.presentation.navigation.Transactions
 
 @Composable
 fun HomeScreen(
-    navController: NavController,
-    padding: PaddingValues
+    navController: NavController
 ) {
     val context = LocalContext.current
 
@@ -29,7 +27,6 @@ fun HomeScreen(
 
     HomeContent(
         state = state,
-        padding = padding,
         onViewTransactions = {
             navController.navigate(Transactions)
         },

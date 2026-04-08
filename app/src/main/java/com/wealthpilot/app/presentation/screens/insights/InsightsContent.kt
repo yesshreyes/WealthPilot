@@ -175,7 +175,7 @@ fun InsightsContent(
                             )
 
                             // Category Rows with progress bars
-                            val maxAmount = state.categoryBreakdown.maxOfOrNull { it.amount } ?: 1.0
+                            val totalAmount = state.categoryBreakdown.sumOf { it.amount }.coerceAtLeast(1.0)
 
                             state.categoryBreakdown.forEachIndexed { index, item ->
                                 Column(
@@ -204,7 +204,7 @@ fun InsightsContent(
                                     Spacer(modifier = Modifier.height(8.dp))
 
                                     LinearProgressIndicator(
-                                        progress = { (item.amount / maxAmount).toFloat().coerceIn(0f, 1f) },
+                                        progress = { (item.amount / totalAmount).toFloat().coerceIn(0f, 1f) },
                                         modifier = Modifier
                                             .fillMaxWidth()
                                             .height(6.dp),

@@ -1,7 +1,10 @@
 package com.wealthpilot.app.presentation.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -23,13 +26,13 @@ fun WealthPilotNavGraph(
 
     NavHost(
         navController = navController,
-        startDestination = Home
+        startDestination = Home,
+        modifier = Modifier.padding(padding).consumeWindowInsets(padding)
     ) {
 
         composable<Home> {
             HomeScreen(
-                navController = navController,
-                padding = padding
+                navController = navController
             )
         }
 
